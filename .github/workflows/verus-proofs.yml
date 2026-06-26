@@ -19,8 +19,10 @@ jobs:
       - name: Install Verus
         run: |
           git clone --depth 1 https://github.com/verus-lang/verus /tmp/verus
-          cd /tmp/verus/source
+          cd /tmp/verus/tools/vargo
           cargo build --release
+          cd /tmp/verus/source
+          ../tools/vargo/target/release/vargo build --release
           echo "/tmp/verus/source/target/release" >> $GITHUB_PATH
       - name: Run proof library verification
         run: |
