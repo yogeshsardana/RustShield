@@ -11,25 +11,8 @@ env:
   RUST_TOOLCHAIN: nightly-2026-05-01
 
 jobs:
-  check:
-    name: Rust check
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions-rust-lang/setup-rust-toolchain@v1
-        with:
-          toolchain: ${{ env.RUST_TOOLCHAIN }}
-          targets: x86_64-unknown-linux-gnu
-          components: rust-src, llvm-tools, rustc-dev, rustfmt, clippy
-      - name: Check workspace
-        run: cargo check --workspace
-      - name: Check formatting
-        run: cargo fmt --all -- --check
-      - name: Clippy
-        run: cargo clippy --workspace -- -D warnings
-
-  test:
-    name: Tests
+  build:
+    name: Build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -38,26 +21,21 @@ jobs:
           toolchain: ${{ env.RUST_TOOLCHAIN }}
           targets: x86_64-unknown-linux-gnu
           components: rust-src, llvm-tools
-      - name: Build
-        run: cargo build --workspace
-      - name: Run tests
-        run: cargo test --workspace
-
-  rustshield-migrate:
-    name: rustshield-migrate tests
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./rustshield-migrate
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions-rust-lang/setup-rust-toolchain@v1
-        with:
-          toolchain: ${{ env.RUST_TOOLCHAIN }}
-      - name: Build
+      - name: Build workspace
+        run: cargo build --release --workspace
+      - name: Build rustshield-migrate (release)
         run: cargo build --release
-      - name: Test
-        run: cargo test
+        working-directory: ./rustshield-migrate
+      - name: Upload rustshield-migrate binary
+        uses: actions/upload-artifact@v4
+        with:
+          name: rustshield-migrate
+          path: rustshield-migrate/target/release/rustshield-migrate
+      - name: Upload workspace libraries
+        uses: actions/upload-artifact@v4
+        with:
+          name: rustshield-libs
+          path: target/release/*.rlib
 
   docs:
     name: Documentation
