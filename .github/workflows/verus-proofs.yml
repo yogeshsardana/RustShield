@@ -22,6 +22,7 @@ jobs:
           cd /tmp/verus/tools/vargo
           cargo build --release
           cd /tmp/verus/source
+          bash ../tools/get-z3.sh
           ../tools/vargo/target/release/vargo build --release
           echo "/tmp/verus/source/target/release" >> $GITHUB_PATH
       - name: Run proof library verification
