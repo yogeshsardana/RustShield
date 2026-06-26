@@ -20,7 +20,7 @@ jobs:
         with:
           toolchain: ${{ env.RUST_TOOLCHAIN }}
           targets: x86_64-unknown-linux-gnu
-          components: rust-src, llvm-tools, rustc-dev
+          components: rust-src, llvm-tools, rustc-dev, rustfmt
       - name: Check workspace
         run: cargo check --workspace
       - name: Check formatting
