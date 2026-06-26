@@ -19,6 +19,12 @@ pub struct InterruptSafeWitness {
     tokens: core::cell::Cell<u32>,
 }
 
+impl Default for InterruptSafeWitness {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl InterruptSafeWitness {
     pub fn new() -> Self {
         Self {

@@ -101,6 +101,12 @@ pub struct TrackedStateMachine<S: DeviceStateMachine> {
     _marker: PhantomData<S>,
 }
 
+impl<S: DeviceStateMachine> Default for TrackedStateMachine<S> {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl<S: DeviceStateMachine> TrackedStateMachine<S> {
     pub fn new() -> Self {
         Self {

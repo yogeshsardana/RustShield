@@ -74,6 +74,12 @@ pub struct BaselineGenerator {
     events: Vec<CanaryEvent>,
 }
 
+impl Default for BaselineGenerator {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl BaselineGenerator {
     pub fn new() -> Self {
         Self { events: Vec::new() }

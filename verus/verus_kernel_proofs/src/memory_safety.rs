@@ -29,6 +29,12 @@ pub struct MemoryLeakWitness {
     allocations: Vec<Allocation>,
 }
 
+impl Default for MemoryLeakWitness {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl MemoryLeakWitness {
     pub fn new() -> Self {
         Self {
