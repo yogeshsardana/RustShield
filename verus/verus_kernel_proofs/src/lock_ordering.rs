@@ -28,6 +28,12 @@ pub struct LockGraph {
     edges: Vec<LockEdge>,
 }
 
+impl Default for LockGraph {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl LockGraph {
     pub fn new() -> Self {
         Self {

@@ -21,6 +21,12 @@ pub struct CanaryManager {
     next_probe_id: u32,
 }
 
+impl Default for CanaryManager {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl CanaryManager {
     pub fn new() -> Self {
         Self {

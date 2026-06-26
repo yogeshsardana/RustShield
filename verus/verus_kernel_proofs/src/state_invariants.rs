@@ -124,6 +124,12 @@ pub struct PowerStateWitness {
     machine: StateMachine<u8>,
 }
 
+impl Default for PowerStateWitness {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl PowerStateWitness {
     pub fn new() -> Self {
         let rules = vec![

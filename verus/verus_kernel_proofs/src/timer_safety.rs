@@ -27,6 +27,12 @@ pub struct TimerSafetyWitness {
     timers: Vec<TrackedTimer>,
 }
 
+impl Default for TimerSafetyWitness {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl TimerSafetyWitness {
     pub fn new() -> Self {
         Self { timers: Vec::new() }
