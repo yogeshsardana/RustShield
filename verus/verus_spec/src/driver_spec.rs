@@ -1,7 +1,5 @@
 // RustShield — driver_spec: Driver specification types shared across components
 
-use core::fmt;
-
 /// Unique identifier for a driver within the RustShield system.
 #[derive(Clone, Debug, PartialEq, Eq, Hash)]
 pub struct DriverId {
