@@ -2,9 +2,9 @@ name: KUnit Tests
 
 on:
   push:
-    branches: [main]
+    branches: [main, rustshield-ys1]
   pull_request:
-    branches: [main]
+    branches: [main, rustshield-ys1]
 
 jobs:
   kunit:
