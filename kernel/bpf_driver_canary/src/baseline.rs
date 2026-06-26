@@ -76,9 +76,7 @@ pub struct BaselineGenerator {
 
 impl BaselineGenerator {
     pub fn new() -> Self {
-        Self {
-            events: Vec::new(),
-        }
+        Self { events: Vec::new() }
     }
 
     /// Record a canary event during baseline capture.

@@ -7,9 +7,9 @@
 use clap::{Parser, Subcommand};
 
 mod analyze;
+mod report;
 mod skeleton;
 mod verus_hints;
-mod report;
 
 #[derive(Parser)]
 #[command(name = "rustshield-migrate")]

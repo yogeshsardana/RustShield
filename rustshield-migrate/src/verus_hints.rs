@@ -33,7 +33,10 @@ impl core::fmt::Display for VerusStatus {
 }
 
 /// Run Verus proofs on a driver.
-pub fn verify_proofs(_proofs_lib: &str, driver_path: &str) -> anyhow::Result<VerusVerificationResult> {
+pub fn verify_proofs(
+    _proofs_lib: &str,
+    driver_path: &str,
+) -> anyhow::Result<VerusVerificationResult> {
     // In production, invokes the Verus verifier:
     //   verus prove --library={proofs_lib} {driver_path}/src/lib.rs
     Ok(VerusVerificationResult {

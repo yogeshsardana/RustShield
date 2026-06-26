@@ -29,9 +29,7 @@ pub struct TimerSafetyWitness {
 
 impl TimerSafetyWitness {
     pub fn new() -> Self {
-        Self {
-            timers: Vec::new(),
-        }
+        Self { timers: Vec::new() }
     }
 
     pub fn add_timer(&mut self, id: u32) {
