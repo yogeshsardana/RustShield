@@ -15,6 +15,7 @@ pub struct CanaryAgreementResult {
 }
 
 /// Final migration readiness report.
+#[allow(dead_code)]
 #[derive(Debug, Serialize, Deserialize)]
 pub struct MigrationReadinessReport {
     pub verus_result: VerusVerificationResult,
@@ -47,6 +48,7 @@ pub fn compute_readiness_score(
 }
 
 /// Generate a full migration report.
+#[allow(dead_code)]
 pub fn generate_report(
     verus: VerusVerificationResult,
     canary: CanaryAgreementResult,
