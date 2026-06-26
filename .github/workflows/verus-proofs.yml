@@ -24,11 +24,13 @@ jobs:
           cd /tmp/verus/source
           bash tools/get-z3.sh
           ../tools/vargo/target/release/vargo build --release
+          cp z3 target/release/
+          touch target/release/verus-root
           echo "/tmp/verus/source/target/release" >> $GITHUB_PATH
       - name: Run proof library verification
         run: |
-          VERUS_Z3_PATH=/tmp/verus/source/z3 verus --verus-root /tmp/verus/source prove verus/verus_kernel_proofs/src/lib.rs
+          verus prove verus/verus_kernel_proofs/src/lib.rs
       - name: Run spec verification
         run: |
-          VERUS_Z3_PATH=/tmp/verus/source/z3 verus --verus-root /tmp/verus/source prove verus/verus_spec/src/lib.rs
+          verus prove verus/verus_spec/src/lib.rs
       # Example proofs omitted: e1000e_demo requires kernel tree
