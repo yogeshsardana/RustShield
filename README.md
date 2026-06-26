@@ -11,7 +11,7 @@
 
 ## Overview
 
-**RustShield** is a framework for safely replacing running C Linux kernel drivers with formally-verified Rust equivalents — **without rebooting, without downtime, without packet loss.**
+**RustShield** is a framework for safely replacing running C Linux kernel drivers with formally-verified Rust equivalents - **without rebooting, without downtime, without packet loss.**
 
 Memory-safety bugs in kernel drivers account for **>60% of Linux kernel CVEs since 2019**. While Rust-for-Linux (mainline since 6.1) enables writing new drivers in Rust, there has been no safe mechanism to migrate *existing* C drivers to Rust in production. RustShield bridges this gap with a three-phase hotswap protocol.
 
@@ -100,7 +100,7 @@ RustShield/
 
 ## Components
 
-### 1. `rust_driver_hotswap` — Kernel Hotswap Subsystem
+### 1. `rust_driver_hotswap` - Kernel Hotswap Subsystem
 
 Target kernel: **6.11+** | [Documentation](docs/hotswap-protocol.md)
 
@@ -110,7 +110,7 @@ The core kernel subsystem providing:
 - 6-phase atomic state handoff (FREEZE → CAPTURE → VERIFY → TRANSFER → ACTIVATE → COMMIT)
 - Sysfs interface for monitoring hotswap status
 
-### 2. `verus_kernel_proofs` — Formal Proof Library
+### 2. `verus_kernel_proofs` - Formal Proof Library
 
 | Documentation](docs/proof-library.md)
 
@@ -133,7 +133,7 @@ The first open corpus of formally verified Linux kernel driver safety invariants
 | `error_recovery` | Error paths leave consistent state |
 | `memory_leak_freedom` | No memory leaks on any driver path |
 
-### 3. `bpf_driver_canary` — eBPF Behavioral Oracle
+### 3. `bpf_driver_canary` - eBPF Behavioral Oracle
 
 Target kernel: **6.12+** | [Documentation](docs/architecture.md)
 
@@ -143,7 +143,7 @@ A new `BPF_PROG_TYPE_DRIVER_CANARY` eBPF program type that:
 - Produces a serialized behavioral baseline specification
 - Compares runtime behavior of the Rust replacement against the oracle
 
-### 4. `rustshield-migrate` — CLI Migration Assistant
+### 4. `rustshield-migrate` - CLI Migration Assistant
 
 ```bash
 # Analyze an existing C driver
@@ -156,7 +156,7 @@ rustshield-migrate skeleton --lang=rust --verus --output=./rust-e1000e/
 rustshield-migrate verify --proofs=verus_kernel_proofs --canary=./baseline.json
 ```
 
-### 5. `RustShield-Nano` — Embedded Hotswap Profile
+### 5. `RustShield-Nano` - Embedded Hotswap Profile
 
 A constrained profile for embedded Linux (automotive, industrial IoT):
 - Targets drivers with ≤ 4 KB device state
@@ -172,10 +172,10 @@ RustShield is currently in **active development** and is being prepared for upst
 
 | Component | Status | Target |
 |-----------|--------|--------|
-| `rust_driver_hotswap` | Prototype | LKML RFC v1 — Q3 2026 |
-| `verus_kernel_proofs` | Proofs under development | v0.1 — Q3 2026 |
+| `rust_driver_hotswap` | Prototype | LKML RFC v1 - Q3 2026 |
+| `verus_kernel_proofs` | Proofs under development | v0.1 - Q3 2026 |
 | `bpf_driver_canary` | Design phase | Q4 2026 |
-| `rustshield-migrate` | CLI skeleton | Alpha — Q3 2026 |
+| `rustshield-migrate` | CLI skeleton | Alpha - Q3 2026 |
 | `e1000e demo` | In progress | LSS EU 2026 demo |
 
 ---
@@ -196,16 +196,16 @@ We welcome contributions! See [CONTRIBUTING.md](.github/CONTRIBUTING.md) for gui
 
 ## License
 
-Apache 2.0 — see [LICENSE](LICENSE).
+Apache 2.0 - see [LICENSE](LICENSE).
 
 ---
 
 ## Related Work
 
-- [Rust-for-Linux](https://rust-for-linux.com/) — Rust support in the Linux kernel
-- [Verus](https://github.com/verus-lang/verus) — Formal verification for Rust
-- [eBPF](https://ebpf.io/) — Extended Berkeley Packet Filter
-- [KUnit](https://kunit.dev/) — Kernel unit testing framework
+- [Rust-for-Linux](https://rust-for-linux.com/) - Rust support in the Linux kernel
+- [Verus](https://github.com/verus-lang/verus) - Formal verification for Rust
+- [eBPF](https://ebpf.io/) - Extended Berkeley Packet Filter
+- [KUnit](https://kunit.dev/) - Kernel unit testing framework
 
 ---
 
