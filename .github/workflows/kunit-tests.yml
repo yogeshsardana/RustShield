@@ -1,0 +1,44 @@
+name: KUnit Tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  kunit:
+    name: KUnit behavioral equivalence tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install kernel build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y bc bison flex libssl-dev make
+          python3 -m pip install kunit
+      - name: Build kernel with RustShield
+        run: |
+          cd /tmp
+          git clone --depth=1 https://github.com/Rust-for-Linux/linux -b rust-nightly
+          cd linux
+          cp $GITHUB_WORKSPACE/kernel/rust_driver_hotswap/Kconfig drivers/rust/
+          mkdir -p drivers/rust/rust_driver_hotswap
+          cp -r $GITHUB_WORKSPACE/kernel/rust_driver_hotswap/* drivers/rust/rust_driver_hotswap/
+          make ARCH=x86_64 defconfig
+          echo "CONFIG_RUST=y" >> .config
+          echo "CONFIG_RUST_DRIVER_HOTSWAP=m" >> .config
+          echo "CONFIG_RUST_DRIVER_HOTSWAP_DEBUG=y" >> .config
+          make -j$(nproc)
+      - name: Build KUnit tests
+        run: |
+          cd /tmp/linux
+          cp -r $GITHUB_WORKSPACE/kernel/driver_migration_tests drivers/rust/
+          ./tools/testing/kunit/kunit.py build \
+            --kconfig_add CONFIG_RUST_DRIVER_HOTSWAP=m \
+            --kconfig_add CONFIG_RUST=y
+      - name: Run KUnit tests
+        run: |
+          cd /tmp/linux
+          ./tools/testing/kunit/kunit.py run \
+            --kunitconfig drivers/rust/driver_migration_tests/

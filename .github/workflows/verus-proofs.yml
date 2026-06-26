@@ -1,0 +1,40 @@
+name: Verus Proofs
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'verus/**'
+      - 'kernel/rust_driver_hotswap/**'
+  pull_request:
+    paths:
+      - 'verus/**'
+      - 'kernel/rust_driver_hotswap/**'
+
+env:
+  RUST_TOOLCHAIN: nightly-2026-05-01
+
+jobs:
+  verus-proofs:
+    name: Verify proofs
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions-rust-lang/setup-rust-toolchain@v1
+        with:
+          toolchain: ${{ env.RUST_TOOLCHAIN }}
+      - name: Install Verus
+        run: |
+          git clone https://github.com/verus-lang/verus /tmp/verus
+          cd /tmp/verus
+          source tools/activate
+          vargo build --release
+      - name: Run proof library verification
+        run: |
+          verus prove verus/verus_kernel_proofs/src/lib.rs
+      - name: Run spec verification
+        run: |
+          verus prove verus/verus_spec/src/lib.rs
+      - name: Run example proofs
+        run: |
+          verus prove examples/e1000e_demo/src/lib.rs
