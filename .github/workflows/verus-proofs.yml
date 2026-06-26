@@ -24,9 +24,9 @@ jobs:
           cd /tmp/verus/source
           bash tools/get-z3.sh
           ../tools/vargo/target/release/vargo build --release
-          cp z3 target/release/
-          touch target/release/verus-root
-          echo "/tmp/verus/source/target/release" >> $GITHUB_PATH
+          cp z3 target-verus/release/
+          touch target-verus/release/verus-root
+          echo "/tmp/verus/source/target-verus/release" >> $GITHUB_PATH
       - name: Run proof library verification
         run: |
           verus verus/verus_kernel_proofs/src/lib.rs
