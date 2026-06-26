@@ -22,6 +22,7 @@ jobs:
         run: |
           git clone https://github.com/verus-lang/verus /tmp/verus
           cd /tmp/verus/source
+          rustup override set ${{ env.RUST_TOOLCHAIN }}
           cargo build --release
           echo "/tmp/verus/source/target/release" >> $GITHUB_PATH
       - name: Run proof library verification
