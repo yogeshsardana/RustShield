@@ -1,6 +1,6 @@
 // RustShield — canary: eBPF program loader and canary lifecycle manager
 
-use crate::{CanaryAttachType, CanaryEvent, CanarySeverity};
+use crate::{CanaryAttachType, CanaryEvent};
 use alloc::vec::Vec;
 
 /// A deployed canary probe on a specific driver function.

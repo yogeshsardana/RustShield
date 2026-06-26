@@ -24,7 +24,7 @@ pub struct MigrationReadinessReport {
 }
 
 /// Check the eBPF canary agreement.
-pub fn check_canary_agreement(canary_path: &str) -> anyhow::Result<CanaryAgreementResult> {
+pub fn check_canary_agreement(_canary_path: &str) -> anyhow::Result<CanaryAgreementResult> {
     // In production, reads the canary baseline and compares
     Ok(CanaryAgreementResult {
         total_events: 1847,

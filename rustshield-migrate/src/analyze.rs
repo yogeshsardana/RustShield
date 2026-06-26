@@ -1,7 +1,6 @@
 // RustShield — analyze: C driver source code analyzer
 
 use serde::{Deserialize, Serialize};
-use std::collections::HashMap;
 use std::path::Path;
 
 /// Result of analyzing a C kernel driver.
