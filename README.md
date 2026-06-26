@@ -37,8 +37,8 @@ Memory-safety bugs in kernel drivers account for **>60% of Linux kernel CVEs sin
 ### Prerequisites
 
 - Rust stable 1.96.0+ (for workspace crates)
-- Linux kernel 6.11+ with Rust support (for kernel module — requires Rust-for-Linux tree)
-- Verus verifier (built from source — see CI workflow)
+- Linux kernel 6.11+ with Rust support (for kernel module - requires Rust-for-Linux tree)
+- Verus verifier (built from source - see CI workflow)
 - LLVM 18+ with eBPF support
 
 ### Building (Workspace Crates)
@@ -105,22 +105,22 @@ RustShield/
 
 Two GitHub Actions workflows ensure continuous quality:
 
-### `ci.yml` — Workspace Build & Artifact
+### `ci.yml` - Workspace Build & Artifact
 
 Triggers on every push/PR to `main` and `rustshield-ys1`:
 
-- `cargo build --release --workspace` — builds all 4 workspace crates
-- `cargo build --release -p rustshield-migrate` — standalone CLI binary
-- `cargo doc --workspace --no-deps` — API documentation
+- `cargo build --release --workspace` - builds all 4 workspace crates
+- `cargo build --release -p rustshield-migrate` - standalone CLI binary
+- `cargo doc --workspace --no-deps` - API documentation
 - Uploads `rustshield-migrate` binary and workspace libraries as downloadable artifacts
 
-### `verus-proofs.yml` — Verus Formal Verification
+### `verus-proofs.yml` - Verus Formal Verification
 
 Triggers on every push/PR to `main` and `rustshield-ys1`:
 
 1. Installs Rust 1.96.0 with `rustc-dev` and `llvm-tools`
 2. Clones and builds [Verus](https://github.com/verus-lang/verus) from source
-3. Runs `verus` on `verus/smoke_test.rs` — a simple proof that arithmetic and boolean assertions hold
+3. Runs `verus` on `verus/smoke_test.rs` - a simple proof that arithmetic and boolean assertions hold
 4. Validates the full Verus toolchain is functional for future proof development
 
 ---
@@ -234,13 +234,13 @@ We welcome contributions! See [CONTRIBUTING.md](.github/CONTRIBUTING.md) for gui
 
 ## License
 
-Apache 2.0 — see [LICENSE](LICENSE).
+Apache 2.0 - see [LICENSE](LICENSE).
 
 ---
 
 ## Author & Maintainer
 
-**Yogesh Sardana** — [yogesh.sardana1@gmail.com](mailto:yogesh.sardana1@gmail.com)
+**Yogesh Sardana** - [yogesh.sardana1@gmail.com](mailto:yogesh.sardana1@gmail.com)
 
 For questions, feedback, or collaboration inquiries, please reach out via email.
 
@@ -248,9 +248,9 @@ For questions, feedback, or collaboration inquiries, please reach out via email.
 
 ## Related Work
 
-- [Rust-for-Linux](https://rust-for-linux.com/) — Rust support in the Linux kernel
-- [Verus](https://github.com/verus-lang/verus) — Formal verification for Rust
-- [eBPF](https://ebpf.io/) — Extended Berkeley Packet Filter
+- [Rust-for-Linux](https://rust-for-linux.com/) - Rust support in the Linux kernel
+- [Verus](https://github.com/verus-lang/verus) - Formal verification for Rust
+- [eBPF](https://ebpf.io/) - Extended Berkeley Packet Filter
 
 ---
 
