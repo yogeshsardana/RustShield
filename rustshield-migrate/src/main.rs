@@ -93,7 +93,7 @@ fn main() -> anyhow::Result<()> {
         }
         Commands::Skeleton {
             analysis,
-            lang,
+            lang: _,
             verus,
             output,
         } => {
