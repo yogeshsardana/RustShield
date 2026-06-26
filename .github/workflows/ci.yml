@@ -2,9 +2,9 @@ name: CI
 
 on:
   push:
-    branches: [main]
+    branches: [main, rustshield-ys1]
   pull_request:
-    branches: [main]
+    branches: [main, rustshield-ys1]
 
 env:
   CARGO_TERM_COLOR: always
