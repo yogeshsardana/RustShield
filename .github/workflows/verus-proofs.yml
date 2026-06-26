@@ -3,14 +3,8 @@ name: Verus Proofs
 on:
   push:
     branches: [main, rustshield-ys1]
-    paths:
-      - 'verus/**'
-      - 'kernel/rust_driver_hotswap/**'
   pull_request:
     branches: [main, rustshield-ys1]
-    paths:
-      - 'verus/**'
-      - 'kernel/rust_driver_hotswap/**'
 
 env:
   RUST_TOOLCHAIN: nightly-2026-05-01
