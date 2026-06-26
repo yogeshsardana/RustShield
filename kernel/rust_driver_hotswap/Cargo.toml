@@ -8,6 +8,6 @@ license.workspace = true
 crate-type = ["staticlib", "rlib"]
 
 [dependencies]
-kernel = { git = "https://github.com/Rust-for-Linux/linux", branch = "rust-nightly" }
+kernel = { git = "https://github.com/Rust-for-Linux/linux", branch = "rust-dev" }
 serde = { workspace = true, features = ["derive"] }
 serde_json = { workspace = true }

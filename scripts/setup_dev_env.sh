@@ -11,7 +11,7 @@ set -euo pipefail
 RUST_NIGHTLY="nightly-2026-05-01"
 VERUS_REPO="https://github.com/verus-lang/verus.git"
 LINUX_REPO="https://github.com/Rust-for-Linux/linux.git"
-LINUX_BRANCH="rust-nightly"
+LINUX_BRANCH="rust-dev"
 
 # ─── Color Output ──────────────────────────────────────────────────────────
 RED='\033[0;31m'
