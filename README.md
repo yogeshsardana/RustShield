@@ -4,7 +4,6 @@
 
 [![CI](https://github.com/yogeshsardana/RustShield/actions/workflows/ci.yml/badge.svg)](https://github.com/yogeshsardana/RustShield/actions/workflows/ci.yml)
 [![Verus Proofs](https://github.com/yogeshsardana/RustShield/actions/workflows/verus-proofs.yml/badge.svg)](https://github.com/yogeshsardana/RustShield/actions/workflows/verus-proofs.yml)
-[![KUnit Tests](https://github.com/yogeshsardana/RustShield/actions/workflows/kunit-tests.yml/badge.svg)](https://github.com/yogeshsardana/RustShield/actions/workflows/kunit-tests.yml)
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
 
 ---
@@ -37,35 +36,40 @@ Memory-safety bugs in kernel drivers account for **>60% of Linux kernel CVEs sin
 
 ### Prerequisites
 
-- Linux kernel 6.11+ (for Rust support)
-- Rust nightly (toolchain specified in `rust-toolchain.toml`)
-- Verus verifier (`cargo install verus`)
+- Rust stable 1.96.0+ (for workspace crates)
+- Linux kernel 6.11+ with Rust support (for kernel module — requires Rust-for-Linux tree)
+- Verus verifier (built from source — see CI workflow)
 - LLVM 18+ with eBPF support
-- `bpf-link`, `bpftool` for eBPF canary deployment
 
-### Building
+### Building (Workspace Crates)
 
 ```bash
-# Clone and enter
 git clone https://github.com/yogeshsardana/RustShield
 cd RustShield
 
-# Build the verification kernel module
-cd kernel/rust_driver_hotswap && make
+# Build all workspace crates (bpf_driver_canary, verus proof libs, migration CLI)
+cargo build --release --workspace
 
-# Run Verus proofs
-cd ../../verus/verus_kernel_proofs && verus prove src/lib.rs
-
-# Build migration CLI
-cd ../../rustshield-migrate && cargo build --release
+# Build the migration CLI specifically
+cargo build --release -p rustshield-migrate
 ```
 
-### Running the Demo
+The workspace contains 4 crates that build with stable Rust 1.96.0:
 
-See [examples/e1000e_demo/](examples/e1000e_demo/) for the full live migration demo:
+| Crate | Description |
+|-------|-------------|
+| `kernel/bpf_driver_canary` | eBPF program type definitions (userspace-side) |
+| `verus/verus_kernel_proofs` | Formal proof library: 14 driver safety invariants |
+| `verus/verus_spec` | Shared specification types for driver behavior |
+| `rustshield-migrate` | CLI migration assistant |
+
+> **Note:** Kernel module crates (`kernel/rust_driver_hotswap`, `kernel/driver_migration_tests`) and driver examples (`examples/e1000e_demo`, `examples/simple_net`) require the full Rust-for-Linux kernel tree and cannot be built standalone. See [RFL kernel build docs](https://rust-for-linux.com/) for in-tree build instructions.
+
+### Running Verus Proofs
 
 ```bash
-./scripts/demo.sh --driver=e1000e --target=192.168.1.100
+# Run the Verus smoke test (validates CI proof pipeline)
+verus verus/smoke_test.rs
 ```
 
 ---
@@ -75,16 +79,15 @@ See [examples/e1000e_demo/](examples/e1000e_demo/) for the full live migration d
 ```
 RustShield/
 ├── kernel/
-│   ├── rust_driver_hotswap/     # Kernel subsystem: DRIVER_HOTSWAP_COMMIT ioctl + DSC protocol
-│   ├── bpf_driver_canary/       # eBPF program type for driver behavioral baselines
-│   └── driver_migration_tests/  # KUnit-based test harness for behavioral equivalence
+│   └── bpf_driver_canary/       # eBPF program type for driver behavioral baselines
 ├── verus/
 │   ├── verus_kernel_proofs/     # Formal proof library: 14 driver safety invariants
-│   └── verus_spec/              # Shared specification language for driver behavior
+│   ├── verus_spec/              # Shared specification language for driver behavior
+│   └── smoke_test.rs            # CI smoke test for Verus verification pipeline
 ├── rustshield-migrate/          # CLI migration assistant (C → Rust + Verus annotations)
-├── examples/
-│   ├── e1000e_demo/             # Full live migration demonstration (NIC driver)
-│   └── simple_net/              # Simplified example for proof-of-concept
+├── .github/workflows/
+│   ├── ci.yml                   # CI: build workspace, run clippy/fmt, upload artifacts
+│   └── verus-proofs.yml         # Build Verus from source, verify smoke test
 ├── docs/
 │   ├── architecture.md          # System architecture
 │   ├── hotswap-protocol.md      # Three-phase protocol specification
@@ -98,23 +101,47 @@ RustShield/
 
 ---
 
+## CI/CD Pipeline
+
+Two GitHub Actions workflows ensure continuous quality:
+
+### `ci.yml` — Workspace Build & Artifact
+
+Triggers on every push/PR to `main` and `rustshield-ys1`:
+
+- `cargo build --release --workspace` — builds all 4 workspace crates
+- `cargo build --release -p rustshield-migrate` — standalone CLI binary
+- `cargo doc --workspace --no-deps` — API documentation
+- Uploads `rustshield-migrate` binary and workspace libraries as downloadable artifacts
+
+### `verus-proofs.yml` — Verus Formal Verification
+
+Triggers on every push/PR to `main` and `rustshield-ys1`:
+
+1. Installs Rust 1.96.0 with `rustc-dev` and `llvm-tools`
+2. Clones and builds [Verus](https://github.com/verus-lang/verus) from source
+3. Runs `verus` on `verus/smoke_test.rs` — a simple proof that arithmetic and boolean assertions hold
+4. Validates the full Verus toolchain is functional for future proof development
+
+---
+
 ## Components
 
-### 1. `rust_driver_hotswap` - Kernel Hotswap Subsystem
+### 1. `bpf_driver_canary` - eBPF Behavioral Oracle
 
-Target kernel: **6.11+** | [Documentation](docs/hotswap-protocol.md)
+Target kernel: **6.12+** | [Documentation](docs/architecture.md)
 
-The core kernel subsystem providing:
-- `DRIVER_HOTSWAP_COMMIT` ioctl for orchestrating live driver migration
-- Device State Capsule (DSC) serialization protocol
-- 6-phase atomic state handoff (FREEZE → CAPTURE → VERIFY → TRANSFER → ACTIVATE → COMMIT)
-- Sysfs interface for monitoring hotswap status
+A new `BPF_PROG_TYPE_DRIVER_CANARY` eBPF program type that:
+- Attaches to C driver kprobes and tracepoints
+- Captures IO path behavior, state transitions, and memory access patterns
+- Produces a serialized behavioral baseline specification
+- Compares runtime behavior of the Rust replacement against the oracle
 
 ### 2. `verus_kernel_proofs` - Formal Proof Library
 
-| Documentation](docs/proof-library.md)
+[Documentation](docs/proof-library.md)
 
-The first open corpus of formally verified Linux kernel driver safety invariants:
+The first open corpus of formally verified Linux kernel driver safety invariants, encoded at the Rust type level:
 
 | Invariant | Description |
 |-----------|-------------|
@@ -133,17 +160,9 @@ The first open corpus of formally verified Linux kernel driver safety invariants
 | `error_recovery` | Error paths leave consistent state |
 | `memory_leak_freedom` | No memory leaks on any driver path |
 
-### 3. `bpf_driver_canary` - eBPF Behavioral Oracle
+> **Proof strategy:** Each invariant is encoded as a witness type with a `verify()` method. The Rust type system enforces that witnesses can only be constructed when their corresponding invariant holds. This provides compile-time verification without requiring SMT-based proof annotations.
 
-Target kernel: **6.12+** | [Documentation](docs/architecture.md)
-
-A new `BPF_PROG_TYPE_DRIVER_CANARY` eBPF program type that:
-- Attaches to C driver kprobes and tracepoints
-- Captures IO path behavior, state transitions, and memory access patterns
-- Produces a serialized behavioral baseline specification
-- Compares runtime behavior of the Rust replacement against the oracle
-
-### 4. `rustshield-migrate` - CLI Migration Assistant
+### 3. `rustshield-migrate` - CLI Migration Assistant
 
 ```bash
 # Analyze an existing C driver
@@ -154,6 +173,24 @@ rustshield-migrate skeleton --lang=rust --verus --output=./rust-e1000e/
 
 # Verify against proofs and canary baseline
 rustshield-migrate verify --proofs=verus_kernel_proofs --canary=./baseline.json
+```
+
+### 4. Kernel Module (`rust_driver_hotswap`)
+
+> **Requires Rust-for-Linux kernel tree at `linux/`**
+
+The core kernel subsystem providing:
+- `DRIVER_HOTSWAP_COMMIT` ioctl for orchestrating live driver migration
+- Device State Capsule (DSC) serialization protocol
+- 6-phase atomic state handoff (FREEZE → CAPTURE → VERIFY → TRANSFER → ACTIVATE → COMMIT)
+- Sysfs interface for monitoring hotswap status
+
+Build in-tree:
+```bash
+cd linux && make LLVM=1 rustavailable
+cp -r RustShield/kernel/rust_driver_hotswap linux/drivers/rust/
+cd linux && make LLVM=1 menuconfig  # Enable CONFIG_RUST_DRIVER_HOTSWAP
+cd linux && make LLVM=1 -j$(nproc)
 ```
 
 ### 5. `RustShield-Nano` - Embedded Hotswap Profile
@@ -168,15 +205,16 @@ A constrained profile for embedded Linux (automotive, industrial IoT):
 
 ## Project Status
 
-RustShield is currently in **active development** and is being prepared for upstream submission to the Linux kernel `linux/rust/` tree.
+RustShield is in **active development** and being prepared for upstream submission to Linux `linux/rust/`.
 
 | Component | Status | Target |
 |-----------|--------|--------|
-| `rust_driver_hotswap` | Prototype | LKML RFC v1 - Q3 2026 |
-| `verus_kernel_proofs` | Proofs under development | v0.1 - Q3 2026 |
+| `rust_driver_hotswap` | Prototype (in-tree) | LKML RFC v1 - Q3 2026 |
+| `verus_kernel_proofs` | Type-level proofs | v0.1 - Q3 2026 |
 | `bpf_driver_canary` | Design phase | Q4 2026 |
 | `rustshield-migrate` | CLI skeleton | Alpha - Q3 2026 |
-| `e1000e demo` | In progress | LSS EU 2026 demo |
+| `e1000e demo` | Design phase | LSS EU 2026 demo |
+| CI/CD pipeline | Operational | Stable |
 
 ---
 
@@ -186,7 +224,7 @@ We welcome contributions! See [CONTRIBUTING.md](.github/CONTRIBUTING.md) for gui
 
 ### Areas needing help
 
-- Additional Verus proofs for more driver invariants
+- Additional Verus proofs (SMT-annotated) for driver invariants
 - eBPF canary program type implementation
 - Support for more driver families (virtio, NVMe, GPU)
 - RustShield-Nano port for embedded Linux
@@ -196,21 +234,28 @@ We welcome contributions! See [CONTRIBUTING.md](.github/CONTRIBUTING.md) for gui
 
 ## License
 
-Apache 2.0 - see [LICENSE](LICENSE).
+Apache 2.0 — see [LICENSE](LICENSE).
+
+---
+
+## Author & Maintainer
+
+**Yogesh Sardana** — [yogesh.sardana1@gmail.com](mailto:yogesh.sardana1@gmail.com)
+
+For questions, feedback, or collaboration inquiries, please reach out via email.
 
 ---
 
 ## Related Work
 
-- [Rust-for-Linux](https://rust-for-linux.com/) - Rust support in the Linux kernel
-- [Verus](https://github.com/verus-lang/verus) - Formal verification for Rust
-- [eBPF](https://ebpf.io/) - Extended Berkeley Packet Filter
-- [KUnit](https://kunit.dev/) - Kernel unit testing framework
+- [Rust-for-Linux](https://rust-for-linux.com/) — Rust support in the Linux kernel
+- [Verus](https://github.com/verus-lang/verus) — Formal verification for Rust
+- [eBPF](https://ebpf.io/) — Extended Berkeley Packet Filter
 
 ---
 
 ## Acknowledgments
 
-This project builds on the foundational work of the Rust-for-Linux Research, and the eBPF community. The 14 kernel driver invariants draw from the collective experience of the Linux kernel community in identifying and classifying driver-class CVEs.
+This project builds on the foundational work of the Rust-for-Linux team, the Verus research group, and the eBPF community. The 14 kernel driver invariants draw from the collective experience of the Linux kernel community in identifying and classifying driver-class CVEs.
 
 ---
