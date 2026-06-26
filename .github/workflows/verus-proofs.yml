@@ -21,9 +21,9 @@ jobs:
       - name: Install Verus
         run: |
           git clone https://github.com/verus-lang/verus /tmp/verus
-          cd /tmp/verus
-          source tools/activate
-          vargo build --release
+          cd /tmp/verus/source
+          cargo build --release
+          echo "/tmp/verus/source/target/release" >> $GITHUB_PATH
       - name: Run proof library verification
         run: |
           verus prove verus/verus_kernel_proofs/src/lib.rs
