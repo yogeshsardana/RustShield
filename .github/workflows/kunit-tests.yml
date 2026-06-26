@@ -12,11 +12,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: actions-rust-lang/setup-rust-toolchain@v1
+        with:
+          toolchain: nightly-2026-05-01
+          targets: x86_64-unknown-linux-gnu
+          components: rust-src, llvm-tools, rustc-dev
       - name: Install kernel build dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y bc bison flex libssl-dev make
-          python3 -m pip install kunit
+          sudo apt-get install -y bc bison flex libssl-dev make python3 \
+            clang llvm libelf-dev libcap-dev
       - name: Build kernel with RustShield
         run: |
           cd /tmp
