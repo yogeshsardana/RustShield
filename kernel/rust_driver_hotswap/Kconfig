@@ -1,0 +1,40 @@
+#
+# RustShield — rust_driver_hotswap kernel configuration
+#
+
+config RUST_DRIVER_HOTSWAP
+    tristate "RustShield: Kernel driver live hotswap subsystem"
+    depends on RUST && BPF_SYSCALL
+    select RUST_KERNEL
+    help
+      Provides the DRIVER_HOTSWAP_COMMIT ioctl and Device State Capsule
+      (DSC) protocol for safely replacing running C kernel drivers with
+      formally-verified Rust equivalents without reboot.
+
+      This is component 1/4 of the RustShield framework.
+
+      If unsure, say N.
+
+config RUST_DRIVER_HOTSWAP_DEBUG
+    bool "RustShield hotswap debugging support"
+    depends on RUST_DRIVER_HOTSWAP
+    help
+      Enables verbose logging and debugfs entries for
+      the hotswap subsystem. Use only for development.
+
+config RUST_DRIVER_HOTSWAP_NANO
+    bool "RustShield-Nano embedded profile support"
+    depends on RUST_DRIVER_HOTSWAP
+    help
+      Enables the RustShield-Nano constrained hotswap profile
+      for embedded Linux with ≤4 KB device state and ISO 26262
+      / IEC 61508 compatibility.
+
+config RUST_DRIVER_HOTSWAP_MAX_DSC_SIZE
+    int "Maximum Device State Capsule size (bytes)"
+    depends on RUST_DRIVER_HOTSWAP
+    range 512 65536
+    default 4096
+    help
+      Maximum size of a serialized device state capsule.
+      4 KB is sufficient for most NIC and block drivers.
