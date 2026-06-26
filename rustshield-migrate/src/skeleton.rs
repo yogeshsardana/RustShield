@@ -1,8 +1,8 @@
 // RustShield — skeleton: Rust driver skeleton generator
 
 use crate::analyze::AnalysisResult;
-use std::path::Path;
 use std::fs;
+use std::path::Path;
 
 /// Generate a Rust driver skeleton from analysis results.
 pub fn generate_skeleton(

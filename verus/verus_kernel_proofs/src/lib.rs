@@ -10,20 +10,20 @@
 
 #![allow(dead_code)]
 
-pub mod interrupt_safety;
 pub mod dma_boundary;
-pub mod refcount;
+pub mod error_codes;
+pub mod error_recovery;
+pub mod interrupt_safety;
+pub mod io_region;
+pub mod irq_liveness;
 pub mod lock_ordering;
-pub mod state_invariants;
 pub mod memory_safety;
+pub mod power_state;
+pub mod refcount;
+pub mod register_access;
+pub mod state_invariants;
 pub mod timer_safety;
 pub mod workqueue_safety;
-pub mod irq_liveness;
-pub mod register_access;
-pub mod power_state;
-pub mod error_recovery;
-pub mod io_region;
-pub mod error_codes;
 
 use core::marker::PhantomData;
 
@@ -133,9 +133,7 @@ pub enum VerificationStatus {
 }
 
 /// Result of running all 14 invariant proofs.
-pub fn run_all_proofs<T: DriverSafetyContract>(
-    driver: &T,
-) -> Result<(), VerificationError> {
+pub fn run_all_proofs<T: DriverSafetyContract>(driver: &T) -> Result<(), VerificationError> {
     driver.interrupt_safety().verify()?;
     driver.dma_boundary().verify()?;
     driver.refcount_correctness().verify()?;

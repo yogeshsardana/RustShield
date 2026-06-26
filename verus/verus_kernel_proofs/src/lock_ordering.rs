@@ -87,23 +87,14 @@ impl LockOrderWitness {
         Ok(())
     }
 
-    fn has_cycle_dfs(
-        &self,
-        node_idx: usize,
-        visited: &mut [bool],
-        in_stack: &mut [bool],
-    ) -> bool {
+    fn has_cycle_dfs(&self, node_idx: usize, visited: &mut [bool], in_stack: &mut [bool]) -> bool {
         visited[node_idx] = true;
         in_stack[node_idx] = true;
 
         let node_name = self.graph.nodes[node_idx].name;
         for edge in &self.graph.edges {
             if edge.from.name == node_name {
-                if let Some(next_idx) = self
-                    .graph
-                    .nodes
-                    .iter()
-                    .position(|n| n.name == edge.to.name)
+                if let Some(next_idx) = self.graph.nodes.iter().position(|n| n.name == edge.to.name)
                 {
                     if !visited[next_idx] {
                         if self.has_cycle_dfs(next_idx, visited, in_stack) {

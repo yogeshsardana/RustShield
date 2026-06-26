@@ -14,12 +14,12 @@
 
 extern crate alloc;
 
-mod canary;
 mod baseline;
+mod canary;
 mod oracle;
 
-pub use canary::*;
 pub use baseline::*;
+pub use canary::*;
 pub use oracle::*;
 
 /// The eBPF program type code for driver canaries.

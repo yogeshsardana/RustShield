@@ -1,7 +1,7 @@
 // RustShield — report: Migration readiness report generator
 
-use serde::{Deserialize, Serialize};
 use crate::verus_hints::VerusVerificationResult;
+use serde::{Deserialize, Serialize};
 
 /// Canary agreement check result.
 #[derive(Debug, Serialize, Deserialize)]

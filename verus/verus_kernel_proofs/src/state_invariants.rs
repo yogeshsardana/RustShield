@@ -127,15 +127,51 @@ pub struct PowerStateWitness {
 impl PowerStateWitness {
     pub fn new() -> Self {
         let rules = vec![
-            TransitionRule { from: 0, to: 1, guard: || true },
-            TransitionRule { from: 0, to: 3, guard: || true },
-            TransitionRule { from: 1, to: 0, guard: || true },
-            TransitionRule { from: 1, to: 2, guard: || true },
-            TransitionRule { from: 2, to: 1, guard: || true },
-            TransitionRule { from: 2, to: 3, guard: || true },
-            TransitionRule { from: 3, to: 0, guard: || true },
-            TransitionRule { from: 3, to: 4, guard: || true },
-            TransitionRule { from: 4, to: 0, guard: || true },
+            TransitionRule {
+                from: 0,
+                to: 1,
+                guard: || true,
+            },
+            TransitionRule {
+                from: 0,
+                to: 3,
+                guard: || true,
+            },
+            TransitionRule {
+                from: 1,
+                to: 0,
+                guard: || true,
+            },
+            TransitionRule {
+                from: 1,
+                to: 2,
+                guard: || true,
+            },
+            TransitionRule {
+                from: 2,
+                to: 1,
+                guard: || true,
+            },
+            TransitionRule {
+                from: 2,
+                to: 3,
+                guard: || true,
+            },
+            TransitionRule {
+                from: 3,
+                to: 0,
+                guard: || true,
+            },
+            TransitionRule {
+                from: 3,
+                to: 4,
+                guard: || true,
+            },
+            TransitionRule {
+                from: 4,
+                to: 0,
+                guard: || true,
+            },
         ];
         Self {
             machine: StateMachine::new(0, rules),

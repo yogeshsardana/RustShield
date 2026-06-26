@@ -47,7 +47,13 @@ impl DeviceStateMachine for NicState {
     }
 
     fn all_states() -> &'static [NicState] {
-        &[NicState::Down, NicState::Up, NicState::Suspended, NicState::Error, NicState::Reset]
+        &[
+            NicState::Down,
+            NicState::Up,
+            NicState::Suspended,
+            NicState::Error,
+            NicState::Reset,
+        ]
     }
 }
 
@@ -80,7 +86,12 @@ impl DeviceStateMachine for BlockState {
     }
 
     fn all_states() -> &'static [BlockState] {
-        &[BlockState::Down, BlockState::Up, BlockState::Suspended, BlockState::Error]
+        &[
+            BlockState::Down,
+            BlockState::Up,
+            BlockState::Suspended,
+            BlockState::Error,
+        ]
     }
 }
 

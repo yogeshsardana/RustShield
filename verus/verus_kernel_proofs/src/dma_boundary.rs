@@ -63,7 +63,8 @@ impl DmaCompletenessWitness {
     }
 
     pub fn mark_unmapped(&self) {
-        self.remaining_mappings.set(self.remaining_mappings.get() - 1);
+        self.remaining_mappings
+            .set(self.remaining_mappings.get() - 1);
     }
 
     /// Verify all DMA mappings have been unmapped.
