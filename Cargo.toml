@@ -1,14 +1,10 @@
 [workspace]
 resolver = "2"
 members = [
-    "kernel/rust_driver_hotswap",
     "kernel/bpf_driver_canary",
-    "kernel/driver_migration_tests",
     "verus/verus_kernel_proofs",
     "verus/verus_spec",
     "rustshield-migrate",
-    "examples/e1000e_demo",
-    "examples/simple_net",
 ]
 
 [workspace.package]
@@ -18,7 +14,6 @@ license = "Apache-2.0"
 repository = "https://github.com/yogeshsardana/RustShield"
 
 [workspace.dependencies]
-kernel = { path = "kernel/rust_driver_hotswap" }
 bpf-canary = { path = "kernel/bpf_driver_canary" }
 verus-proofs = { path = "verus/verus_kernel_proofs" }
 verus-spec = { path = "verus/verus_spec" }

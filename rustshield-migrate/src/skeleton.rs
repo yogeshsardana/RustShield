@@ -24,7 +24,7 @@ edition = "2021"
 crate-type = ["staticlib"]
 
 [dependencies]
-kernel = {{ git = "https://github.com/Rust-for-Linux/linux", branch = "rust-dev" }}
+kernel = {{ git = "https://github.com/Rust-for-Linux/linux", branch = "rust-next" }}
 verus-proofs = {{ git = "https://github.com/yogeshsardana/RustShield" }}
 "#,
         name = analysis.driver_name
