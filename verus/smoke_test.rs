@@ -17,6 +17,8 @@ fn test_boolean_logic() {
 }
 
 fn test_ensures(x: u64) -> (y: u64)
+    requires
+        x < u64::MAX,
     ensures
         y == x + 1,
 {
