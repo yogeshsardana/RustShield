@@ -29,8 +29,8 @@ jobs:
           echo "/tmp/verus/source/target/release" >> $GITHUB_PATH
       - name: Run proof library verification
         run: |
-          verus prove verus/verus_kernel_proofs/src/lib.rs
+          verus verus/verus_kernel_proofs/src/lib.rs
       - name: Run spec verification
         run: |
-          verus prove verus/verus_spec/src/lib.rs
+          verus verus/verus_spec/src/lib.rs
       # Example proofs omitted: e1000e_demo requires kernel tree
