@@ -156,7 +156,7 @@ pub fn run_all_proofs<T: DriverSafetyContract>(
 /// Verification entry point — run by `rustshield-migrate verify`.
 pub fn verify_driver<T: DriverSafetyContract>(
     driver: &T,
-    expected_status: VerificationStatus,
+    _expected_status: VerificationStatus,
 ) -> VerificationStatus {
     match run_all_proofs(driver) {
         Ok(()) => VerificationStatus::AllProofsPassed,
