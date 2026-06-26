@@ -1,0 +1,52 @@
+name: CI
+
+on:
+  push:
+    branches: [main, rustshield-ys1]
+  pull_request:
+    branches: [main, rustshield-ys1]
+
+env:
+  CARGO_TERM_COLOR: always
+  RUST_TOOLCHAIN: nightly-2026-05-01
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions-rust-lang/setup-rust-toolchain@v1
+        with:
+          toolchain: ${{ env.RUST_TOOLCHAIN }}
+          targets: x86_64-unknown-linux-gnu
+          components: rust-src, llvm-tools
+      - name: Build workspace
+        run: cargo build --release --workspace
+      - name: Build rustshield-migrate (release)
+        run: cargo build --release
+        working-directory: ./rustshield-migrate
+      - name: Upload rustshield-migrate binary
+        uses: actions/upload-artifact@v4
+        with:
+          name: rustshield-migrate
+          path: rustshield-migrate/target/release/rustshield-migrate
+      - name: Upload workspace libraries
+        uses: actions/upload-artifact@v4
+        with:
+          name: rustshield-libs
+          path: target/release/*.rlib
+
+  docs:
+    name: Documentation
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions-rust-lang/setup-rust-toolchain@v1
+        with:
+          toolchain: ${{ env.RUST_TOOLCHAIN }}
+      - name: Build docs
+        run: cargo doc --workspace --no-deps
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: target/doc

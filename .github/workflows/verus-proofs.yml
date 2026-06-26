@@ -1,0 +1,32 @@
+name: Verus Proofs
+
+on:
+  push:
+    branches: [main, rustshield-ys1]
+  pull_request:
+    branches: [main, rustshield-ys1]
+
+jobs:
+  verus-proofs:
+    name: Verify proofs
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: '1.96.0'
+          components: rust-src, rustc-dev, llvm-tools-preview
+      - name: Install Verus
+        run: |
+          git clone --depth 1 https://github.com/verus-lang/verus /tmp/verus
+          cd /tmp/verus/tools/vargo
+          cargo build --release
+          cd /tmp/verus/source
+          bash tools/get-z3.sh
+          ../tools/vargo/target/release/vargo build --release
+          cp z3 target-verus/release/
+          touch target-verus/release/verus-root
+          echo "/tmp/verus/source/target-verus/release" >> $GITHUB_PATH
+      - name: Verify smoke test
+        run: |
+          verus verus/smoke_test.rs
