@@ -2,9 +2,9 @@
 
 > Memory-Safe Linux Kernel Driver Hotswap with Formal Verification via Verus + eBPF Canaries
 
-[![CI](https://github.com/[org]/RustShield/actions/workflows/ci.yml/badge.svg)](https://github.com/[org]/RustShield/actions/workflows/ci.yml)
-[![Verus Proofs](https://github.com/[org]/RustShield/actions/workflows/verus-proofs.yml/badge.svg)](https://github.com/[org]/RustShield/actions/workflows/verus-proofs.yml)
-[![KUnit Tests](https://github.com/[org]/RustShield/actions/workflows/kunit-tests.yml/badge.svg)](https://github.com/[org]/RustShield/actions/workflows/kunit-tests.yml)
+[![CI](https://github.com/yogeshsardana/RustShield/actions/workflows/ci.yml/badge.svg)](https://github.com/yogeshsardana/RustShield/actions/workflows/ci.yml)
+[![Verus Proofs](https://github.com/yogeshsardana/RustShield/actions/workflows/verus-proofs.yml/badge.svg)](https://github.com/yogeshsardana/RustShield/actions/workflows/verus-proofs.yml)
+[![KUnit Tests](https://github.com/yogeshsardana/RustShield/actions/workflows/kunit-tests.yml/badge.svg)](https://github.com/yogeshsardana/RustShield/actions/workflows/kunit-tests.yml)
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
 
 ---
@@ -47,7 +47,7 @@ Memory-safety bugs in kernel drivers account for **>60% of Linux kernel CVEs sin
 
 ```bash
 # Clone and enter
-git clone https://github.com/[org]/RustShield
+git clone https://github.com/yogeshsardana/RustShield
 cd RustShield
 
 # Build the verification kernel module
@@ -211,8 +211,6 @@ Apache 2.0 — see [LICENSE](LICENSE).
 
 ## Acknowledgments
 
-This project builds on the foundational work of the Rust-for-Linux team (led by Miguel Ojeda), the Verus team at VMware Research / Microsoft Research, and the eBPF community. The 14 kernel driver invariants draw from the collective experience of the Linux kernel community in identifying and classifying driver-class CVEs.
+This project builds on the foundational work of the Rust-for-Linux Research, and the eBPF community. The 14 kernel driver invariants draw from the collective experience of the Linux kernel community in identifying and classifying driver-class CVEs.
 
 ---
-
-*Presented at [Linux Security Summit Europe 2026](https://lssna.linuxfoundation.org/) — Prague, Czechia*

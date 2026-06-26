@@ -215,7 +215,7 @@ RustShield contributes four upstream-targetable components to the `linux/rust/` 
 
 ## Additional Resources
 
-- **Source Code:** https://github.com/[org]/RustShield (Apache 2.0)
+- **Source Code:** https://github.com/yogeshsardana/RustShield (Apache 2.0)
 - **Proof Library:** `verus_kernel_proofs/` — 14 formalized driver invariants
 - **eBPF Canary Spec:** `docs/hotswap-protocol.md` — Phase I protocol specification
 - **Upstream RFCs:** `rfcs/0001-rust-driver-hotswap-subsystem.md` — LKML submission draft

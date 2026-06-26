@@ -25,7 +25,7 @@ crate-type = ["staticlib"]
 
 [dependencies]
 kernel = {{ git = "https://github.com/Rust-for-Linux/linux", branch = "rust-nightly" }}
-verus-proofs = {{ git = "https://github.com/[org]/RustShield" }}
+verus-proofs = {{ git = "https://github.com/yogeshsardana/RustShield" }}
 "#,
         name = analysis.driver_name
     );
