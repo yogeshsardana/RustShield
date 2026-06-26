@@ -27,6 +27,7 @@ jobs:
           cd /tmp
           git clone --depth=1 https://github.com/Rust-for-Linux/linux -b rust-next
           cd linux
+          mkdir -p drivers/rust
           cp $GITHUB_WORKSPACE/kernel/rust_driver_hotswap/Kconfig drivers/rust/
           mkdir -p drivers/rust/rust_driver_hotswap
           cp -r $GITHUB_WORKSPACE/kernel/rust_driver_hotswap/* drivers/rust/rust_driver_hotswap/
