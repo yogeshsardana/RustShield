@@ -6,7 +6,6 @@
 // Proof technique: State machine refinement with pre/post conditions.
 
 use crate::VerificationError;
-use crate::DeviceState;
 
 /// A state machine transition rule.
 #[derive(Clone, Debug)]
