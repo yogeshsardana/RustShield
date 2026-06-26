@@ -41,10 +41,9 @@ jobs:
           cd /tmp/linux
           cp -r $GITHUB_WORKSPACE/kernel/driver_migration_tests drivers/rust/
           ./tools/testing/kunit/kunit.py build \
-            --kconfig_add CONFIG_RUST_DRIVER_HOTSWAP=m \
-            --kconfig_add CONFIG_RUST=y
+            --kunitconfig drivers/rust/driver_migration_tests/kunitconfig
       - name: Run KUnit tests
         run: |
           cd /tmp/linux
           ./tools/testing/kunit/kunit.py run \
-            --kunitconfig drivers/rust/driver_migration_tests/
+            --kunitconfig drivers/rust/driver_migration_tests/kunitconfig
